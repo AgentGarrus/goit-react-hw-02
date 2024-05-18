@@ -2,21 +2,14 @@ import { useState, useEffect } from 'react';
 import Feedback from './components/Feedback/Feedback.jsx';
 import Options from './components/Options/Options.jsx';
 import Notification from './components/Notification/Notification.jsx';
+import Description from './components/Description/Description.jsx';
 import './App.css'
 
 const App = () => {
-  const [feedback, setFeedback] = useState({
-    good: 0,
-    neutral: 0,
-    bad: 0
-  });
-
-  useEffect(() => {
+  const [feedback, setFeedback] = useState(() => {
     const storedFeedback = JSON.parse(localStorage.getItem('feedback'));
-    if (storedFeedback) {
-      setFeedback(storedFeedback);
-    }
-  }, []);
+    return storedFeedback || { good: 0, neutral: 0, bad: 0 };
+  });
 
   useEffect(() => {
     localStorage.setItem('feedback', JSON.stringify(feedback));
@@ -44,8 +37,7 @@ const App = () => {
 
   return (
     <div>
-      <h1>Sip Happens Café</h1>
-      <p>Please leave your feedback about our service by selecting one of the options below.</p>
+      <Description />
       <Options updateFeedback={updateFeedback} resetFeedback={resetFeedback} totalFeedback={totalFeedback} />
       {totalFeedback > 0 ? (
         <Feedback feedback={feedback} totalFeedback={totalFeedback} positiveFeedbackPercentage={positiveFeedbackPercentage} />
